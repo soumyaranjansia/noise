@@ -108,18 +108,14 @@ if (isset($_POST['create'])) {
   <form class="form-control mt-5 p-4" action="" method="post">
 
     <h3>Upload Your Observation</h3>
-    <form action="" method="get">
+    
       <select class="form-select" name="district" id="dname">
-        <option selected>Select District</option>
-        <?php getDistrictInOptionForm(); ?>
+        <option value="" selected>Select District</option>
       </select>
-    </form>
+   
     <br>
     <select class="form-select" name="block" id="bname">
-      <option selected>Select Block</option>
-      <?php
-      $dist_name ='Ganjam';
-      getBlockInOptionForm($dist_name); ?>
+      <option value="" >Select Block</option>
     </select>
     <br>
 
@@ -133,5 +129,31 @@ if (isset($_POST['create'])) {
   </form>
 </div>
 
+<!--script for PHP Ajax Dependent Select Box-->
+<script type="text/javascript">
+  $(document).ready(function(){
+     function loadData(type,distr_name){
+       $.ajax({
+         url:"district_block_select.php",
+         type:"POST",
+         data: {type: type , dist:distr_name},
+         success:function(data){
+           if(type=="blockData"){
+            $("#bname").html(data);
+              }
+           else{
+           $("#dname").append(data);
+              }
+         } 
+       });
+     }
+     loadData();
+     
+     $('#dname').on('change',function(){
+       var dname=$('#dname').val();
+       loadData('blockData',dname);
+     })
+  });
+</script>
 <!-- FOOTER -->
 <?php include "includes/footer.php"; ?>
